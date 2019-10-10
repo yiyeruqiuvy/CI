@@ -128,20 +128,9 @@ while mm < kk:
 	for m in mt:
 		print(m)#最后交配的基因
 
-	#5.变异
-	TPO = 0.1
-	p = 0
-	while p < 5:
-		rr = r.randint(0,1000)/1000
-		if rr <= TPO:
-			mt[p][r.randint(0,3)] = r.randint(-500,500)/100
-		p+=1
-	#变异后的基因
-	print('变异后的基因')
-	for m in mt:
-		print(m)
 
-	#6.重新更新染色体适应值，更新染色体最优值
+
+	#5.重新更新染色体适应值，更新染色体最优值
 	e = []
 	for m in mt:
 		e.append(f(m[0], m[1], m[2], m[3]))
