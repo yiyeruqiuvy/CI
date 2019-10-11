@@ -1,8 +1,8 @@
 import random as r
 
 Max_t = 0.0#最优基因
-kk = 53#迭代次数
-PS = 5 #群体规模
+kk = 2#迭代次数
+PS = 10 #群体规模
 mm = 0
 
 #1.初始化
@@ -128,12 +128,12 @@ while mm < kk:
 
 	#5.变异
 	TPO = 0.1
-	p = 0
-	while p < 5:
-		rr = r.randint(0,1000)/1000
-		if rr <= TPO:
-			mt[p][r.randint(0,3)] = r.randint(-500,500)/100
-		p+=1
+	p = 0	
+	for i in range(len(mt)):
+		rr = r.randint(0,10)/10
+		if rr < TPO:
+			print(i)
+			mt[i][r.randint(0,3)] = r.randint(-500,500)/100
 	#变异后的基因
 	print('变异后的基因')
 	for m in mt:

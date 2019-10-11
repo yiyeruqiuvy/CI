@@ -3,8 +3,8 @@ import random as r
 #遗传算法求解背包问题
 
 Max_t = 0.0#最优基因
-kk = 53#迭代次数
-PS = 5 #群体规模
+kk = 5#迭代次数
+PS = 6 #群体规模
 mm = 0
 
 #1.初始化
@@ -90,7 +90,7 @@ while mm < kk:
 	xy2 = []#交配的选择容器
 	p = 0
 	k = 0.88
-	while p < 5:
+	while p < PS:
 		rr = r.randint(0,100)/100
 		if rr < k:
 			xy.append(ee[p])#交配
