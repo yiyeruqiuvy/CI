@@ -2,42 +2,54 @@ import random as r
 
 #遗传算法求解背包问题
 
-Max_t = 0.0#最优基因
-kk = 5#迭代次数
-PS = 6 #群体规模
+Max_t = 0#最优基因
+Max_e = []
+kk = 30#迭代次数
+PS = 5 #群体规模
 mm = 0
+wt = [4, 3, 1, 1]#重量
+tv = [3, 2, 1.5, 2]#价值
+wt_limit = 4 #背包容量
 
-#1.初始化
-tt = []
-def d():
-	a = []
-	p = 4 #一条染色体上的基因数
-	while p:
-		a.append((r.randint(-500,500)/100))
-		p-=1
-	return a
-for i in range(PS):
-	tt.append(d())
 while mm < kk:
+	#1.初始化
+	tt = []
+	def f_wt(x):
+			return x[0]*wt[0]+x[1]*wt[1]+x[2]*wt[2]+x[3]*wt[3]
+	def d_4():
+		a = []
+		for i in range(4):#一条染色体上的基因数
+			a.append((r.randint(0,5)))
+		return a
+	def f_produce():
+		tt = []
+		for i in range(PS):#限制超过背包容量
+			t = d_4()
+			while f_wt(t) > wt_limit:
+				t = d_4()
+			tt.append(t)
+		return tt
+
 	#2.适应性评价
-	def f(x1, x2, x3, x4):
-			return 1/(x1**2+x2**2+x3**2+x4**2)	
-	Eval = []#适应值
-	t = []
-	if mm == 0:
-		t = tt[:]
-	else:
-		t = mt
+	def f_tv(x):
+			return x[0]*tv[0]+x[1]*tv[1]+x[2]*tv[2]+x[3]*tv[3]
+	Eval = []#背包的
+	t = f_produce()
 	for tt in t:
-		Eval.append(f(tt[0], tt[1], tt[2], tt[3]))
+		Eval.append(f_tv(tt))
 	print('初始基因：')
 	for tt in t:
 		print(tt)
 	max_t = max(Eval)
 	if max_t > Max_t:
 		Max_t = max_t
+	for i in range(PS):
+		if Eval[i] == Max_t:
+			Max_e = t[i]
+			break
 	print('最优染色体')
 	print(max_t)
+
 
 	#3.选择
 	def sum_s(t):
@@ -85,7 +97,7 @@ while mm < kk:
 	for e in ee:
 		print(e)
 
-	#4.交配
+	#4.交配x变异
 	xy = []
 	xy2 = []#交配的选择容器
 	p = 0
@@ -107,7 +119,14 @@ while mm < kk:
 			tt = xy[p][rr]
 			xy[p][rr] = xy[p+1][rr]
 			xy[p+1][rr] = tt
-
+			if f_wt(xy[p]) > wt_limit or f_wt(xy[p+1]) > wt_limit:
+				td = d_4()
+				while f_wt(td) > wt_limit:
+					td = d_4()
+				print(td)
+				for i in range(4):
+					xy[p][i] = td[i]
+					xy[p+1][i] = td[i]
 			p+=2
 	else:
 		pp = xy.pop()
@@ -117,32 +136,43 @@ while mm < kk:
 			tt = xy[p][rr]
 			xy[p][rr] = xy[p+1][rr]
 			xy[p+1][rr] = tt
+			if f_wt(xy[p]) > wt_limit or f_wt(xy[p+1]) > wt_limit:
+				te = d_4()
+				while f_wt(te) > wt_limit:
+					te = d_4()
+				print(te)
+				for i in range(4):
+					xy[p][i] = te[i]
+					xy[p+1][i] = te[i]
 			p+=2
 		xy.append(pp)
-	p = 0
 	for i in xy2:
-		xy.append(i) 
-
+		xy.append(i)
 	mt = xy[:]
 	print('交配完成的基因')
 	for m in mt:
 		print(m)#最后交配的基因
 
-
-
 	#5.重新更新染色体适应值，更新染色体最优值
 	e = []
 	for m in mt:
-		e.append(f(m[0], m[1], m[2], m[3]))
+		e.append(f_tv(m))
 	max_tt = max(e)
-	print('1次迭代后的适应值:')
+	print('1次迭代后的最优适应值:')
 	print(max_tt)
-	if max_tt > Max_t:
+	if max_tt >= Max_t:
 		Max_t = max_tt
+	for i in range(PS):
+		if e[i] == Max_t:
+			Max_e = mt[i]
+			break
 	mm+=1
 
 print('经过'+str(kk)+'次之后的最优值:')
 print(Max_t)
+print('经过'+str(kk)+'次之后的最优基因:')
+print(Max_e)
+
 
 
 
